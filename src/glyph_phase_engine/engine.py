@@ -3,7 +3,7 @@ Core engine module for glyph phase processing.
 """
 
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
 class PhaseState(Enum):
@@ -20,14 +20,14 @@ class GlyphPhaseEngine:
     A Python engine that processes symbolic input and adjusts operational phase
     based on dynamic delta values.
     """
-    
+
     def __init__(self, initial_phase: PhaseState = PhaseState.INITIAL):
         """Initialize the engine with an initial phase state."""
         self.current_phase = initial_phase
-        self.delta_values: List[float] = []
-        self.symbolic_input: Optional[str] = None
-        self.metadata: Dict[str, Any] = {}
-    
+        self.delta_values: list[float] = []
+        self.symbolic_input: str | None = None
+        self.metadata: dict[str, Any] = {}
+
     def process_symbolic_input(self, symbolic_input: str) -> PhaseState:
         """
         Process symbolic input and potentially change phase state.
@@ -40,24 +40,24 @@ class GlyphPhaseEngine:
         """
         self.symbolic_input = symbolic_input
         self.current_phase = PhaseState.PROCESSING
-        
+
         try:
             # Basic symbolic processing simulation
             if not symbolic_input or not isinstance(symbolic_input, str):
                 self.current_phase = PhaseState.ERROR
                 return self.current_phase
-                
+
             # Simulate processing based on input characteristics
             if len(symbolic_input) > 100:
                 self.current_phase = PhaseState.DELTA_ADJUSTMENT
             else:
                 self.current_phase = PhaseState.STABILIZED
-                
+
         except Exception:
             self.current_phase = PhaseState.ERROR
-            
+
         return self.current_phase
-    
+
     def adjust_phase_delta(self, delta_value: float) -> PhaseState:
         """
         Adjust the operational phase based on a delta value.
@@ -69,7 +69,7 @@ class GlyphPhaseEngine:
             The new phase state after delta adjustment
         """
         self.delta_values.append(delta_value)
-        
+
         if self.current_phase == PhaseState.DELTA_ADJUSTMENT:
             # Apply delta logic
             if abs(delta_value) < 0.1:
@@ -77,10 +77,10 @@ class GlyphPhaseEngine:
             elif abs(delta_value) > 1.0:
                 self.current_phase = PhaseState.ERROR
             # Otherwise stay in delta adjustment
-            
+
         return self.current_phase
-    
-    def get_phase_info(self) -> Dict[str, Any]:
+
+    def get_phase_info(self) -> dict[str, Any]:
         """
         Get current phase information.
         
@@ -93,7 +93,7 @@ class GlyphPhaseEngine:
             "symbolic_input": self.symbolic_input,
             "metadata": self.metadata.copy()
         }
-    
+
     def reset(self) -> None:
         """Reset the engine to initial state."""
         self.current_phase = PhaseState.INITIAL

@@ -57,7 +57,7 @@ This project uses GitHub Actions for automated testing and publishing:
 ### Publishing Workflow Features
 
 - ✅ Trusted Publishing setup for PyPI/TestPyPI
-- ✅ SLSA attestation generation 
+- ✅ SLSA attestation generation
 - ✅ Build → twine check → provenance → publish → smoke install pipeline
 - ✅ Version/tag consistency checks
 - ✅ Comprehensive sanity checks and validation

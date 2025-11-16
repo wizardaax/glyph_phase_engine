@@ -31,9 +31,11 @@ class GlyphPhaseEngine:
         """Process symbolic input and potentially change phase state.
 
         Args:
+        ----
             symbolic_input: The symbolic input to process
 
         Returns:
+        -------
             The new phase state after processing
 
         """
@@ -61,9 +63,11 @@ class GlyphPhaseEngine:
         """Adjust the operational phase based on a delta value.
 
         Args:
+        ----
             delta_value: The delta value to apply
 
         Returns:
+        -------
             The new phase state after delta adjustment
 
         """
@@ -82,7 +86,8 @@ class GlyphPhaseEngine:
     def get_phase_info(self) -> Dict[str, Any]:
         """Get current phase information.
 
-        Returns:
+        Returns
+        -------
             Dictionary containing phase state and related information
 
         """

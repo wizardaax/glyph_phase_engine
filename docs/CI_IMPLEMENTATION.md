@@ -27,7 +27,7 @@ The repository needed CI workflows for publishing to PyPI/TestPyPI with Trusted 
 - ✅ Post-publish smoke testing
 - ✅ Dry-run capability
 
-#### 2. TestPyPI Publishing (`publish-testpypi.yml`)  
+#### 2. TestPyPI Publishing (`publish-testpypi.yml`)
 **Triggers**: Push to main, workflow_dispatch with dry_run option
 **Key Features**:
 - ✅ Development version generation (timestamp + commit hash)

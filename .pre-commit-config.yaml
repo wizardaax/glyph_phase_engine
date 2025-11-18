@@ -11,7 +11,7 @@ repos:
       - id: detect-private-key
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.1.9
+    rev: v0.4.4
     hooks:
       - id: ruff
         args: [--fix]
@@ -24,8 +24,3 @@ repos:
         additional_dependencies: []
         args: [--config-file=mypy.ini]
         exclude: ^(tests/|scripts/)
-
-  - repo: https://github.com/psf/black
-    rev: 23.12.1
-    hooks:
-      - id: black

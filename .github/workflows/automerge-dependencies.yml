@@ -9,10 +9,9 @@ permissions:
   pull-requests: write
 
 jobs:
-  auto-merge:
+  dependabot-auto-merge:
     name: Auto-merge Dependabot PRs
     runs-on: ubuntu-latest
-    # Only run on Dependabot PRs
     if: github.actor == 'dependabot[bot]'
 
     steps:
@@ -41,3 +40,15 @@ jobs:
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+  # This job always runs to ensure the workflow is never skipped
+  # This prevents blocking PRs when the workflow is set as a required check
+  check-complete:
+    name: Dependabot Check Complete
+    runs-on: ubuntu-latest
+    if: always()
+    needs: [dependabot-auto-merge]
+    
+    steps:
+      - name: Workflow complete
+        run: echo "Dependabot auto-merge workflow complete"

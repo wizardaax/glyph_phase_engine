@@ -136,7 +136,7 @@ jobs:
         twine check dist/*
         
     - name: Generate SLSA attestations
-      uses: actions/attest-build-provenance@v1
+      uses: actions/attest-build-provenance@v3
       with:
         subject-path: 'dist/*'
         

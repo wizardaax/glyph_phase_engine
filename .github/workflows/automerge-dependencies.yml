@@ -46,7 +46,6 @@ jobs:
   check-complete:
     name: Dependabot Check Complete
     runs-on: ubuntu-latest
-    if: always()
     
     steps:
       - name: Workflow complete

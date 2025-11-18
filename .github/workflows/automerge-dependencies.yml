@@ -47,7 +47,6 @@ jobs:
     name: Dependabot Check Complete
     runs-on: ubuntu-latest
     if: always()
-    needs: [dependabot-auto-merge]
     
     steps:
       - name: Workflow complete

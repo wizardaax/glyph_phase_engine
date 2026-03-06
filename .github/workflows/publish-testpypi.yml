@@ -44,11 +44,16 @@ jobs:
         # For TestPyPI, append commit hash to version for uniqueness
         COMMIT_HASH=$(git rev-parse --short HEAD)
         TIMESTAMP=$(date +%Y%m%d%H%M%S)
+        export COMMIT_HASH TIMESTAMP
         
         # Read current version and append dev suffix
         python -c "
         import re
         import sys
+        import os
+        
+        TIMESTAMP = os.environ['TIMESTAMP']
+        COMMIT_HASH = os.environ['COMMIT_HASH']
         
         with open('pyproject.toml', 'r') as f:
             content = f.read()

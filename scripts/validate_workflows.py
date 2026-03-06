@@ -2,7 +2,7 @@
 """
 Workflow Validation Script
 
-This script validates that the implemented CI workflows address all the 
+This script validates that the implemented CI workflows address all the
 potential failure scenarios mentioned in the issue template.
 """
 
@@ -15,11 +15,7 @@ def check_workflow_features():
     """Check if workflows have required features to prevent common failures."""
 
     workflow_dir = Path(".github/workflows")
-    results = {
-        "pypi_workflow": {},
-        "testpypi_workflow": {},
-        "test_workflow": {}
-    }
+    results = {"pypi_workflow": {}, "testpypi_workflow": {}, "test_workflow": {}}
 
     # Check PyPI workflow
     pypi_file = workflow_dir / "publish-pypi.yml"
@@ -32,7 +28,9 @@ def check_workflow_features():
         results["pypi_workflow"]["version_validation"] = "Version mismatch" in str(pypi_workflow)
         results["pypi_workflow"]["twine_check"] = "twine check" in str(pypi_workflow)
         results["pypi_workflow"]["smoke_test"] = "Smoke test" in str(pypi_workflow)
-        results["pypi_workflow"]["slsa_attestation"] = "attest-build-provenance" in str(pypi_workflow)
+        results["pypi_workflow"]["slsa_attestation"] = "attest-build-provenance" in str(
+            pypi_workflow
+        )
 
     # Check TestPyPI workflow
     testpypi_file = workflow_dir / "publish-testpypi.yml"
@@ -40,8 +38,12 @@ def check_workflow_features():
         with open(testpypi_file) as f:
             testpypi_workflow = yaml.safe_load(f)
 
-        results["testpypi_workflow"]["trusted_publishing"] = "id-token: write" in str(testpypi_workflow)
-        results["testpypi_workflow"]["sanity_checks"] = "sanity checks" in str(testpypi_workflow).lower()
+        results["testpypi_workflow"]["trusted_publishing"] = "id-token: write" in str(
+            testpypi_workflow
+        )
+        results["testpypi_workflow"]["sanity_checks"] = (
+            "sanity checks" in str(testpypi_workflow).lower()
+        )
         results["testpypi_workflow"]["size_check"] = "Package size" in str(testpypi_workflow)
         results["testpypi_workflow"]["forbidden_files"] = ".pyc" in str(testpypi_workflow)
         results["testpypi_workflow"]["dev_versioning"] = "dev" in str(testpypi_workflow)
@@ -57,6 +59,7 @@ def check_workflow_features():
         results["test_workflow"]["coverage"] = "cov" in str(test_workflow)
 
     return results
+
 
 def check_package_structure():
     """Check if package structure is correct."""
@@ -80,6 +83,7 @@ def check_package_structure():
     results["has_engine"] = Path("src/glyph_phase_engine/engine.py").exists()
 
     return results
+
 
 def print_validation_results():
     """Print validation results in a readable format."""
@@ -115,7 +119,7 @@ def print_validation_results():
         "Development versioning for TestPyPI",
         "Comprehensive error handling and retries",
         "Matrix testing across Python versions",
-        "Proper build artifact verification"
+        "Proper build artifact verification",
     ]
 
     for scenario in addressed_scenarios:
@@ -123,6 +127,7 @@ def print_validation_results():
 
     print("\n🎯 Implementation Status: COMPLETE")
     print("   All major CI publishing failure scenarios have been addressed.")
+
 
 if __name__ == "__main__":
     print_validation_results()

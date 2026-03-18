@@ -2,6 +2,14 @@
 
 from glyph_phase_engine import GlyphPhaseEngine, PhaseState
 
+# Named constants for magic values used in delta/length comparisons
+SMALL_DELTA = 0.05
+LARGE_DELTA = 1.5
+MEDIUM_DELTA = 0.5
+INFO_DELTA = 0.3
+LONG_INPUT_SIZE = 150  # Test value exceeding the engine's 100-char threshold
+PHASE_STATE_COUNT = 5
+
 
 class TestGlyphPhaseEngine:
     """Test cases for GlyphPhaseEngine."""
@@ -29,7 +37,7 @@ class TestGlyphPhaseEngine:
     def test_process_symbolic_input_long(self):
         """Test processing long symbolic input."""
         engine = GlyphPhaseEngine()
-        long_input = "x" * 150  # > 100 characters
+        long_input = "x" * LONG_INPUT_SIZE  # > 100 characters
         result = engine.process_symbolic_input(long_input)
         assert result == PhaseState.DELTA_ADJUSTMENT
         assert engine.symbolic_input == long_input
@@ -46,33 +54,33 @@ class TestGlyphPhaseEngine:
     def test_adjust_phase_delta_small(self):
         """Test delta adjustment with small value."""
         engine = GlyphPhaseEngine(PhaseState.DELTA_ADJUSTMENT)
-        result = engine.adjust_phase_delta(0.05)
+        result = engine.adjust_phase_delta(SMALL_DELTA)
         assert result == PhaseState.STABILIZED
-        assert 0.05 in engine.delta_values
+        assert SMALL_DELTA in engine.delta_values
 
     def test_adjust_phase_delta_large(self):
         """Test delta adjustment with large value."""
         engine = GlyphPhaseEngine(PhaseState.DELTA_ADJUSTMENT)
-        result = engine.adjust_phase_delta(1.5)
+        result = engine.adjust_phase_delta(LARGE_DELTA)
         assert result == PhaseState.ERROR
-        assert 1.5 in engine.delta_values
+        assert LARGE_DELTA in engine.delta_values
 
     def test_adjust_phase_delta_medium(self):
         """Test delta adjustment with medium value."""
         engine = GlyphPhaseEngine(PhaseState.DELTA_ADJUSTMENT)
-        result = engine.adjust_phase_delta(0.5)
+        result = engine.adjust_phase_delta(MEDIUM_DELTA)
         assert result == PhaseState.DELTA_ADJUSTMENT
-        assert 0.5 in engine.delta_values
+        assert MEDIUM_DELTA in engine.delta_values
 
     def test_get_phase_info(self):
         """Test getting phase information."""
         engine = GlyphPhaseEngine()
         engine.process_symbolic_input("test")
-        engine.adjust_phase_delta(0.3)
+        engine.adjust_phase_delta(INFO_DELTA)
 
         info = engine.get_phase_info()
         assert info["current_phase"] == "stabilized"
-        assert info["delta_values"] == [0.3]
+        assert info["delta_values"] == [INFO_DELTA]
         assert info["symbolic_input"] == "test"
         assert isinstance(info["metadata"], dict)
 
@@ -104,7 +112,7 @@ class TestPhaseState:
     def test_phase_state_iteration(self):
         """Test phase state enum iteration."""
         states = list(PhaseState)
-        assert len(states) == 5
+        assert len(states) == PHASE_STATE_COUNT
         assert PhaseState.INITIAL in states
         assert PhaseState.PROCESSING in states
         assert PhaseState.DELTA_ADJUSTMENT in states

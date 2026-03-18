@@ -23,9 +23,15 @@ def check_workflow_features():
         with open(pypi_file) as f:
             pypi_workflow = yaml.safe_load(f)
 
-        results["pypi_workflow"]["trusted_publishing"] = "id-token: write" in str(pypi_workflow)
-        results["pypi_workflow"]["attestations"] = "attestations: write" in str(pypi_workflow)
-        results["pypi_workflow"]["version_validation"] = "Version mismatch" in str(pypi_workflow)
+        results["pypi_workflow"]["trusted_publishing"] = "id-token: write" in str(
+            pypi_workflow
+        )
+        results["pypi_workflow"]["attestations"] = "attestations: write" in str(
+            pypi_workflow
+        )
+        results["pypi_workflow"]["version_validation"] = "Version mismatch" in str(
+            pypi_workflow
+        )
         results["pypi_workflow"]["twine_check"] = "twine check" in str(pypi_workflow)
         results["pypi_workflow"]["smoke_test"] = "Smoke test" in str(pypi_workflow)
         results["pypi_workflow"]["slsa_attestation"] = "attest-build-provenance" in str(
@@ -44,8 +50,12 @@ def check_workflow_features():
         results["testpypi_workflow"]["sanity_checks"] = (
             "sanity checks" in str(testpypi_workflow).lower()
         )
-        results["testpypi_workflow"]["size_check"] = "Package size" in str(testpypi_workflow)
-        results["testpypi_workflow"]["forbidden_files"] = ".pyc" in str(testpypi_workflow)
+        results["testpypi_workflow"]["size_check"] = "Package size" in str(
+            testpypi_workflow
+        )
+        results["testpypi_workflow"]["forbidden_files"] = ".pyc" in str(
+            testpypi_workflow
+        )
         results["testpypi_workflow"]["dev_versioning"] = "dev" in str(testpypi_workflow)
 
     # Check test workflow

@@ -46,6 +46,8 @@ should ensure that glyph content doesn't leak information through timing
 or phase transition patterns.
 """
 
+from __future__ import annotations
+
 from enum import Enum
 from typing import Any
 

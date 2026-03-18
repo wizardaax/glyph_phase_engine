@@ -78,11 +78,13 @@ jobs:
       run: |
         ls -la dist/
         # Check that we have both wheel and source distribution
-        if [[ ! -f dist/*.whl ]]; then
+        WHL_COUNT=$(ls dist/*.whl 2>/dev/null | wc -l)
+        if [[ "$WHL_COUNT" -eq 0 ]]; then
           echo "❌ No wheel file found"
           exit 1
         fi
-        if [[ ! -f dist/*.tar.gz ]]; then
+        SDIST_COUNT=$(ls dist/*.tar.gz 2>/dev/null | wc -l)
+        if [[ "$SDIST_COUNT" -eq 0 ]]; then
           echo "❌ No source distribution found"
           exit 1
         fi

@@ -46,11 +46,13 @@ should ensure that glyph content doesn't leak information through timing
 or phase transition patterns.
 """
 
+import math
+from collections import Counter
 from enum import Enum
 from typing import Any
 
 # Thresholds for phase convergence logic
-_INPUT_LENGTH_THRESHOLD = 100  # Inputs with length > this need delta adj.
+_ENTROPY_THRESHOLD = 3.5  # Shannon bits; typical English/JSON ~4-5, repetitive <3
 _SMALL_DELTA_THRESHOLD = 0.1  # |delta| < this → converged (STABILIZED)
 _LARGE_DELTA_THRESHOLD = 1.0  # |delta| > this → diverged (ERROR)
 
@@ -135,12 +137,14 @@ class GlyphPhaseEngine:
 
         Current Implementation:
         - Validates input (non-empty string)
-        - Long input (>100 chars) → DELTA_ADJUSTMENT phase
-        - Normal input → STABILIZED phase
+        - High-entropy input (Shannon >= 3.5 bits) → DELTA_ADJUSTMENT phase
+        - Low-entropy input (repetitive/simple) → STABILIZED phase
         - Invalid input → ERROR phase
 
-        Subclasses can override this to implement sophisticated symbolic
-        analysis, pattern matching, or computational logic.
+        Shannon entropy of the character distribution measures information
+        density, which is a meaningful proxy for semantic richness.
+        Typical agent outputs (JSON, structured prose) score 4–5 bits;
+        repetitive or trivial strings score below 3 bits.
 
         Args:
             symbolic_input: The symbolic input string to process
@@ -152,15 +156,10 @@ class GlyphPhaseEngine:
             >>> engine = GlyphPhaseEngine()
             >>> engine.process_symbolic_input("compute")
             <PhaseState.STABILIZED: 'stabilized'>
-            >>> engine.process_symbolic_input("x" * 150)
+            >>> engine.process_symbolic_input('{"status": "completed", "agent": "agent-01"}')
             <PhaseState.DELTA_ADJUSTMENT: 'delta_adjustment'>
             >>> engine.process_symbolic_input("")
             <PhaseState.ERROR: 'error'>
-
-        Note:
-            The simple length-based heuristic is a placeholder.
-            Real applications should implement meaningful symbolic
-            analysis based on glyph semantics.
         """
         self.symbolic_input = symbolic_input
         self.current_phase = PhaseState.PROCESSING
@@ -171,12 +170,20 @@ class GlyphPhaseEngine:
                 self.current_phase = PhaseState.ERROR
                 return self.current_phase
 
-            # Simulate processing based on input characteristics
-            # Long input requires delta adjustment (iterative refinement)
-            if len(symbolic_input) > _INPUT_LENGTH_THRESHOLD:
+            # Shannon entropy of character distribution — measures information
+            # density, a meaningful proxy for semantic richness.
+            # Threshold: 3.5 bits separates structured/varied text (~4–5 bits
+            # for agent JSON/prose) from repetitive/trivial input (<3 bits).
+            counts = Counter(symbolic_input)
+            total = len(symbolic_input)
+            entropy = -sum(
+                (c / total) * math.log2(c / total) for c in counts.values()
+            )
+            if entropy >= _ENTROPY_THRESHOLD:
+                # Information-dense input requires iterative delta refinement
                 self.current_phase = PhaseState.DELTA_ADJUSTMENT
             else:
-                # Short input stabilizes immediately
+                # Low-entropy (simple/repetitive) input stabilizes immediately
                 self.current_phase = PhaseState.STABILIZED
 
         except Exception:
